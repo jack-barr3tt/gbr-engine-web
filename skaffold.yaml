@@ -1,0 +1,36 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+build:
+  artifacts:
+    - image: gbr-engine-web
+      context: .
+      docker:
+        dockerfile: Dockerfile
+    - image: queuer
+      context: gbr-engine
+      docker:
+        dockerfile: src/queuer/Dockerfile
+    - image: trust-consumer
+      context: gbr-engine
+      docker:
+        dockerfile: src/trust-consumer/Dockerfile
+    - image: vstp-consumer
+      context: gbr-engine
+      docker:
+        dockerfile: src/vstp-consumer/Dockerfile
+    - image: data-fetcher
+      context: gbr-engine
+      docker:
+        dockerfile: src/data-fetcher/Dockerfile
+    - image: schedule-initializer
+      context: gbr-engine
+      docker:
+        dockerfile: src/schedule-initializer/Dockerfile
+    - image: http-api
+      context: gbr-engine
+      docker:
+        dockerfile: src/http-api/Dockerfile
+deploy:
+  kubectl:
+    manifests:
+      - k8s/rendered-manifests.yaml
