@@ -1,5 +1,6 @@
 import { Button } from "flowbite-react"
 import { Link } from "react-router"
+import { FaGithub } from "react-icons/fa"
 
 export default function NavBar() {
   return (
@@ -9,7 +10,16 @@ export default function NavBar() {
       </Link>
 
       {/* Navigation buttons */}
-      {/* <Button pill>Home</Button> */}
+      <Link to="/docs">
+        <Button pill color="orange">
+          API
+        </Button>
+      </Link>
+      <Link to="https://github.com/jack-barr3tt/gbr-engine">
+        <Button pill color="orange">
+          <FaGithub />
+        </Button>
+      </Link>
     </div>
   )
 }

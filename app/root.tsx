@@ -61,6 +61,11 @@ const customTheme = createTheme({
       children: "p-4",
     },
   },
+  button: {
+    color: {
+      orange: "bg-orange-500 hover:bg-orange-600 text-white",
+    },
+  },
 })
 
 export function Layout({ children }: { children: React.ReactNode }) {

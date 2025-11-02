@@ -17,12 +17,16 @@
     "@react-router/serve": "^7.9.2",
     "@tanstack/react-query": "^5.90.5",
     "axios": "^1.13.1",
+    "core-js": "^3.46.0",
     "flowbite-react": "^0.12.10",
     "isbot": "^5.1.31",
+    "mobx": "^6.15.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",
     "react-router": "^7.9.2",
+    "redoc": "^3.0.0-rc.0",
+    "styled-components": "^6.1.19",
     "ts-morph": "^27.0.2"
   },
   "devDependencies": {
@@ -39,6 +43,7 @@
   "overrides": {
     "@7nohe/openapi-react-query-codegen": {
       "ts-morph": "^27.0.2"
-    }
+    },
+    "react-router-dom": "npm:react-router@^7.9.2"
   }
 }
