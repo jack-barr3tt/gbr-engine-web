@@ -4,8 +4,10 @@ import type { Route } from "./+types/root"
 import "./app.css"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { client } from "./api/requests"
-import type { Route } from "./+types/root";
-import "./app.css";
+import NavBar from "./components/navbar"
+import { ThemeInit } from "../.flowbite-react/init"
+import { createTheme, ThemeProvider } from "flowbite-react"
+import type { DeepPartial, FlowbiteTheme } from "flowbite-react/types"
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,6 +28,15 @@ client.setConfig({
   throwOnError: true,
 })
 
+const customTheme = createTheme({
+  card: {
+    root: {
+      base: "border-none shadow-md/5 h-fit",
+      children: "p-4",
+    },
+  },
+})
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -35,9 +46,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <body className="p-4 bg-linear-to-br from-orange-50 to-violet-100 h-screen w-screen">
+        <ThemeProvider theme={customTheme}>
+          <ThemeInit />
+          <NavBar />
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

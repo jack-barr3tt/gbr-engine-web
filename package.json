@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@7nohe/openapi-react-query-codegen": "^2.0.0-beta.3",
+    "@floating-ui/react": "^0.27.16",
     "@react-router/node": "^7.9.2",
     "@react-router/serve": "^7.9.2",
+    "@tanstack/react-query": "^5.90.5",
+    "flowbite-react": "^0.12.10",
     "isbot": "^5.1.31",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
