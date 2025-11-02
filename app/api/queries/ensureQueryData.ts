@@ -1,6 +1,6 @@
 // generated with @7nohe/openapi-react-query-codegen@2.0.0-beta.3 
 
-import { type Options } from "@hey-api/client-fetch";
+import { type Options } from "@hey-api/client-axios";
 import { type QueryClient } from "@tanstack/react-query";
 import { getHealth, getLocations, getOperators } from "../requests/services.gen";
 import * as Common from "./common";

@@ -1,6 +1,6 @@
 // generated with @7nohe/openapi-react-query-codegen@2.0.0-beta.3 
 
-import { type Options } from "@hey-api/client-fetch";
+import { type Options } from "@hey-api/client-axios";
 import { UseQueryResult } from "@tanstack/react-query";
 import { getHealth, getLocations, getOperators, queryServices } from "../requests/services.gen";
 export type GetHealthDefaultResponse = Awaited<ReturnType<typeof getHealth>>["data"];

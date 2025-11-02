@@ -61,7 +61,6 @@ export default function SearchSelect(props: SearchSelectProps) {
           }}
           onFocus={() => setIsOpen(true)}
           onBlur={(e) => {
-            // Delay closing to allow click events on dropdown items
             setTimeout(() => setIsOpen(false), 150)
           }}
           placeholder={placeholder || "Search..."}
@@ -94,7 +93,6 @@ export default function SearchSelect(props: SearchSelectProps) {
                       key={value}
                       className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors"
                       onMouseDown={(e) => {
-                        // Prevent blur event on input
                         e.preventDefault()
                       }}
                       onClick={() => {
