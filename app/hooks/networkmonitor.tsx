@@ -20,6 +20,9 @@ type NetworkMonitorProviderProps = {
 let speedEntries: SpeedEntry[] = []
 let listeners: Set<() => void> = new Set()
 
+// Expose speedEntries globally for other modules
+;(globalThis as any).speedEntries = speedEntries
+
 // Regular function to add speed - can be called from anywhere
 export function addSpeed(speed: number) {
   const newEntry: SpeedEntry = {
@@ -28,6 +31,8 @@ export function addSpeed(speed: number) {
   }
   // Keep only the last 5 entries
   speedEntries = [...speedEntries, newEntry].slice(-5)
+  // Update global reference
+  ;(globalThis as any).speedEntries = speedEntries
 
   // Notify all listeners
   listeners.forEach((listener) => listener())

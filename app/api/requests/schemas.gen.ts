@@ -36,6 +36,22 @@ export const ServiceQueryRequestSchema = {
                     }
                 }
             }
+        },
+        offset: {
+            type: 'integer',
+            description: 'Number of services to skip (0-indexed)',
+            minimum: 0,
+            maximum: 1000,
+            default: 0,
+            example: 0
+        },
+        limit: {
+            type: 'integer',
+            description: 'Maximum number of services to return',
+            minimum: 1,
+            maximum: 100,
+            default: 50,
+            example: 50
         }
     }
 } as const;
@@ -79,6 +95,49 @@ export const HealthResponseSchema = {
         }
     },
     required: ['status', 'version']
+} as const;
+
+export const ServiceQueryResponseSchema = {
+    type: 'object',
+    properties: {
+        services: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/ServiceResponse'
+            }
+        },
+        pagination: {
+            '$ref': '#/components/schemas/PaginationInfo'
+        }
+    },
+    required: ['services', 'pagination']
+} as const;
+
+export const PaginationInfoSchema = {
+    type: 'object',
+    properties: {
+        offset: {
+            type: 'integer',
+            description: 'Number of services skipped',
+            example: 0
+        },
+        limit: {
+            type: 'integer',
+            description: 'Maximum number of services returned',
+            example: 50
+        },
+        returned: {
+            type: 'integer',
+            description: 'Actual number of services returned in this response',
+            example: 50
+        },
+        total_results: {
+            type: 'integer',
+            description: 'Total number of services matching the query',
+            example: 150
+        }
+    },
+    required: ['offset', 'limit', 'returned', 'total_results']
 } as const;
 
 export const ServiceResponseSchema = {

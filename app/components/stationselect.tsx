@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react"
 import SearchSelect from "./searchselect"
-import { useGetLocations } from "~/hooks/useGetLocations"
+import { useGetLocations } from "~/api/queries"
 import { titleCase } from "~/utils/format"
 import type { Location } from "~/api/requests/types.gen"
 

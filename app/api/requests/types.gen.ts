@@ -23,6 +23,14 @@ export type ServiceQueryRequest = {
          */
         time_to?: string;
     }>;
+    /**
+     * Number of services to skip (0-indexed)
+     */
+    offset?: number;
+    /**
+     * Maximum number of services to return
+     */
+    limit?: number;
 };
 
 export type LocationFilter = {
@@ -47,6 +55,30 @@ export type LocationFilter = {
 export type HealthResponse = {
     status: string;
     version: string;
+};
+
+export type ServiceQueryResponse = {
+    services: Array<ServiceResponse>;
+    pagination: PaginationInfo;
+};
+
+export type PaginationInfo = {
+    /**
+     * Number of services skipped
+     */
+    offset: number;
+    /**
+     * Maximum number of services returned
+     */
+    limit: number;
+    /**
+     * Actual number of services returned in this response
+     */
+    returned: number;
+    /**
+     * Total number of services matching the query
+     */
+    total_results: number;
 };
 
 export type ServiceResponse = {
@@ -122,11 +154,15 @@ export type GetHealthResponse = (HealthResponse);
 
 export type GetHealthError = (ErrorResponse);
 
+export type GetSchemaResponse = (string);
+
+export type GetSchemaError = (ErrorResponse);
+
 export type QueryServicesData = {
     body: ServiceQueryRequest;
 };
 
-export type QueryServicesResponse = (Array<ServiceResponse>);
+export type QueryServicesResponse = (ServiceQueryResponse);
 
 export type QueryServicesError = (ErrorResponse | NotFoundResponse);
 

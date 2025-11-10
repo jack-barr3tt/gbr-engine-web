@@ -1,12 +1,16 @@
 // generated with @7nohe/openapi-react-query-codegen@2.0.0-beta.3 
 
-import { type Options } from "@hey-api/client-axios";
+import { type Options } from "@hey-api/client-fetch";
 import { UseQueryResult } from "@tanstack/react-query";
-import { getHealth, getLocations, getOperators, queryServices } from "../requests/services.gen";
+import { getHealth, getLocations, getOperators, getSchema, queryServices } from "../requests/services.gen";
 export type GetHealthDefaultResponse = Awaited<ReturnType<typeof getHealth>>["data"];
 export type GetHealthQueryResult<TData = GetHealthDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGetHealthKey = "GetHealth";
 export const UseGetHealthKeyFn = (clientOptions: Options<unknown, true> = {}, queryKey?: Array<unknown>) => [useGetHealthKey, ...(queryKey ?? [clientOptions])];
+export type GetSchemaDefaultResponse = Awaited<ReturnType<typeof getSchema>>["data"];
+export type GetSchemaQueryResult<TData = GetSchemaDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useGetSchemaKey = "GetSchema";
+export const UseGetSchemaKeyFn = (clientOptions: Options<unknown, true> = {}, queryKey?: Array<unknown>) => [useGetSchemaKey, ...(queryKey ?? [clientOptions])];
 export type GetLocationsDefaultResponse = Awaited<ReturnType<typeof getLocations>>["data"];
 export type GetLocationsQueryResult<TData = GetLocationsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGetLocationsKey = "GetLocations";

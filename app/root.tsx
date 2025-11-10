@@ -23,35 +23,32 @@ export const links: Route.LinksFunction = () => [
 ]
 
 const queryClient = new QueryClient()
-client.setConfig({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
-  throwOnError: true,
-})
 
-client.instance.interceptors.request.use((config) => {
-  ;(config as any).startTime = Date.now()
-  return config
-})
+// Create custom fetch wrapper for network monitoring
+const monitoredFetch: typeof fetch = async (...args) => {
+  const startTime = Date.now()
 
-client.instance.interceptors.response.use((response) => {
+  const response = await fetch(...args)
+
   const endTime = Date.now()
-  const startTime = (response.config as any).startTime
+  const duration = endTime - startTime
+  const contentLength = response.headers.get("content-length")
 
-  if (startTime) {
-    const duration = endTime - startTime
-    const contentLength = response.headers["content-length"]
+  if (contentLength) {
+    const bytes = parseInt(contentLength, 10)
+    const kilobytes = bytes / 1024
+    const seconds = duration / 1000
+    const speed = kilobytes / seconds
 
-    if (contentLength) {
-      const bytes = parseInt("" + contentLength, 10)
-      const kilobytes = bytes / 1024
-      const seconds = duration / 1000
-      const speed = kilobytes / seconds
-
-      addSpeed(speed)
-    }
+    addSpeed(speed)
   }
 
   return response
+}
+
+client.setConfig({
+  baseUrl: import.meta.env.VITE_BACKEND_URL,
+  fetch: monitoredFetch,
 })
 
 const customTheme = createTheme({
