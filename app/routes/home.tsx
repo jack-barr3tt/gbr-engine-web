@@ -1,8 +1,5 @@
-import { Button, Card, Label } from "flowbite-react"
 import type { Route } from "./+types/home"
-import { FiArrowRight } from "react-icons/fi"
-import { useState } from "react"
-import StationSelect from "~/components/stationselect"
+import ServiceSearch from "~/components/servicesearch"
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,28 +13,11 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const [from, setFrom] = useState("")
-  const [to, setTo] = useState("")
-
   return (
     <div className="flex flex-col md:flex-row px-8 md:py-16 pt-4">
-      <Card className="flex md:w-1/3 -mx-12 md:mx-0 flex-1">
-        <h1 className="font-semibold text-2xl">Search</h1>
-
-        <form className="flex flex-col gap-2">
-          <Label htmlFor="origin" className="mt-2">
-            Origin
-          </Label>
-          <StationSelect value={from} onValueChange={setFrom} id="origin" />
-          <Label htmlFor="destination" className="mt-2">
-            Destination
-          </Label>
-          <StationSelect value={to} onValueChange={setTo} id="destination" />
-          <Button className="mt-2">
-            Go <FiArrowRight className="ml-2" />
-          </Button>
-        </form>
-      </Card>
+      <div className="md:w-1/3 -mx-12 md:mx-0 flex-1">
+        <ServiceSearch />
+      </div>
 
       <div className="pt-8 md:p-8 flex items-center flex-col justify-center flex-1">
         <div className="flex-col flex gap-4">

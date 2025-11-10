@@ -8,6 +8,7 @@ type SearchSelectProps = {
   value: string
   placeholder?: string
   onValueChange: Dispatch<SetStateAction<string>>
+  onBlur?: () => void
   getValueText?: (value: string) => string
   options: { value: string; label: string }[]
   color?: "info" | "success" | "failure"
@@ -21,6 +22,7 @@ export default function SearchSelect(props: SearchSelectProps) {
     value: selected,
     placeholder,
     onValueChange,
+    onBlur,
     getValueText,
     color,
     loading,
@@ -61,7 +63,10 @@ export default function SearchSelect(props: SearchSelectProps) {
           }}
           onFocus={() => setIsOpen(true)}
           onBlur={(e) => {
-            setTimeout(() => setIsOpen(false), 150)
+            setTimeout(() => {
+              setIsOpen(false)
+              onBlur?.()
+            }, 150)
           }}
           placeholder={placeholder || "Search..."}
           color={color}
