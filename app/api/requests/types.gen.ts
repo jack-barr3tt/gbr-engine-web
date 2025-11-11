@@ -91,6 +91,14 @@ export type ServiceResponse = {
     schedule_end_date?: string;
     schedule_days_runs?: string;
     train_status?: string;
+    /**
+     * TRUST train ID (if activated)
+     */
+    trust_id?: string;
+    /**
+     * TRUST activation timestamp (if activated)
+     */
+    activation_time?: string;
     operator?: Operator;
     locations: Array<ScheduleLocation>;
 };
@@ -173,3 +181,24 @@ export type GetLocationsError = (ErrorResponse);
 export type GetOperatorsResponse = (Array<Operator>);
 
 export type GetOperatorsError = (ErrorResponse);
+
+export type GetServiceData = {
+    query?: {
+        /**
+         * Date to filter by (required when using id, optional with uid)
+         */
+        date?: string;
+        /**
+         * Schedule ID to search for (must be used with date)
+         */
+        id?: number;
+        /**
+         * Train UID to search for
+         */
+        uid?: string;
+    };
+};
+
+export type GetServiceResponse = (ServiceResponse);
+
+export type GetServiceError = (ErrorResponse | NotFoundResponse);

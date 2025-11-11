@@ -36,6 +36,7 @@ export default function Services() {
                 <ServiceTable
                   services={data.services}
                   searchedCrs={from}
+                  searchedDate={date}
                   pendingCount={pendingCount}
                 />
               ) : (

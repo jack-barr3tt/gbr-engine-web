@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react"
+import { useNavigate } from "react-router"
 import type { ServiceResponse } from "~/api/requests/types.gen"
 import { titleCase } from "~/utils/format"
 import { TimeDisplay } from "./timedisplay"
@@ -6,14 +7,18 @@ import { TimeDisplay } from "./timedisplay"
 interface ServiceTableProps {
   services: ServiceResponse[]
   searchedCrs?: string | null
+  searchedDate?: string | null
   pendingCount?: number
 }
 
 export default function ServiceTable({
   services,
   searchedCrs,
+  searchedDate,
   pendingCount = 0,
 }: ServiceTableProps) {
+  const navigate = useNavigate()
+
   const formatTime = (time?: string) => {
     if (!time) return "-"
     // Extract just the time portion (HH:MM)
@@ -45,6 +50,37 @@ export default function ServiceTable({
     return found || service.locations[0]
   }
 
+  const handleRowClick = (service: ServiceResponse) => {
+    if (searchedDate) {
+      navigate(`/service?id=${service.id}&date=${searchedDate}`)
+    }
+  }
+
+  const getServiceStatus = (service: ServiceResponse) => {
+    const origin = service.locations.find((loc) => loc.location_order === 1)
+    const hasDepartedOrigin = !!origin?.actual_departure
+
+    const isActivated = !!service.trust_id
+
+    if (hasDepartedOrigin) {
+      return "departed"
+    } else if (isActivated) {
+      return "activated"
+    }
+    return "scheduled"
+  }
+
+  const getStatusBorderClass = (status: string) => {
+    switch (status) {
+      case "departed":
+        return "border-l-4 border-l-green-500"
+      case "activated":
+        return "border-l-4 border-l-yellow-300"
+      default:
+        return ""
+    }
+  }
+
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -60,8 +96,14 @@ export default function ServiceTable({
         <TableBody className="divide-y divide-gray-200">
           {services.map((service) => {
             const searchedLocation = getSearchedLocation(service)
+            const status = getServiceStatus(service)
+            const borderClass = getStatusBorderClass(status)
             return (
-              <TableRow key={service.id} className="bg-white">
+              <TableRow
+                key={service.id}
+                className={`bg-white hover:bg-gray-50 cursor-pointer ${borderClass}`}
+                onClick={() => handleRowClick(service)}
+              >
                 <TableCell className="whitespace-nowrap font-medium text-gray-900 px-2 py-2 text-center">
                   {service.signalling_id}
                 </TableCell>

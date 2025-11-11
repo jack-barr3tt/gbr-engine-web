@@ -181,6 +181,16 @@ export const ServiceResponseSchema = {
             type: 'string',
             example: 'P'
         },
+        trust_id: {
+            type: 'string',
+            description: 'TRUST train ID (if activated)',
+            example: '123A45BC67'
+        },
+        activation_time: {
+            type: 'string',
+            description: 'TRUST activation timestamp (if activated)',
+            example: '1699000000000'
+        },
         operator: {
             '$ref': '#/components/schemas/Operator'
         },

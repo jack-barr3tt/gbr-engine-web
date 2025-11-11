@@ -2,7 +2,7 @@
 
 import { type Options } from "@hey-api/client-fetch";
 import { UseQueryResult } from "@tanstack/react-query";
-import { getHealth, getLocations, getOperators, getSchema, queryServices } from "../requests/services.gen";
+import { getHealth, getLocations, getOperators, getSchema, getService, queryServices } from "../requests/services.gen";
 export type GetHealthDefaultResponse = Awaited<ReturnType<typeof getHealth>>["data"];
 export type GetHealthQueryResult<TData = GetHealthDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGetHealthKey = "GetHealth";
@@ -19,6 +19,10 @@ export type GetOperatorsDefaultResponse = Awaited<ReturnType<typeof getOperators
 export type GetOperatorsQueryResult<TData = GetOperatorsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useGetOperatorsKey = "GetOperators";
 export const UseGetOperatorsKeyFn = (clientOptions: Options<unknown, true> = {}, queryKey?: Array<unknown>) => [useGetOperatorsKey, ...(queryKey ?? [clientOptions])];
+export type GetServiceDefaultResponse = Awaited<ReturnType<typeof getService>>["data"];
+export type GetServiceQueryResult<TData = GetServiceDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useGetServiceKey = "GetService";
+export const UseGetServiceKeyFn = (clientOptions: Options<unknown, true> = {}, queryKey?: Array<unknown>) => [useGetServiceKey, ...(queryKey ?? [clientOptions])];
 export type QueryServicesMutationResult = Awaited<ReturnType<typeof queryServices>>;
 export const useQueryServicesKey = "QueryServices";
 export const UseQueryServicesKeyFn = (mutationKey?: Array<unknown>) => [useQueryServicesKey, ...(mutationKey ?? [])];
