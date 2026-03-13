@@ -75,7 +75,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body
-        className="p-4 bg-linear-to-br from-orange-50 to-violet-100 h-screen w-screen"
+        className="p-4 bg-linear-to-br from-orange-50 to-violet-100 bg-fixed min-h-screen w-screen"
         suppressHydrationWarning
       >
         <ThemeProvider theme={customTheme}>
