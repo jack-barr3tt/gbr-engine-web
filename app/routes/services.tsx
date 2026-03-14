@@ -73,8 +73,8 @@ export default function Services() {
           {isPending && <p className="mt-4">Searching for services...</p>}
 
           {data && (
-            <div className="mt-4">
-              <p className="text-sm text-gray-500 mb-2">
+            <div>
+              <p className="text-sm text-gray-500 mb-3">
                 Found {data.pagination?.total_results || 0}{" "}
                 {data.pagination?.total_results === 1 ? "service" : "services"}
               </p>
