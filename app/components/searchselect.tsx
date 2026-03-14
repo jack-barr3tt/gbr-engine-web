@@ -1,5 +1,5 @@
 import { Card, Spinner, TextInput } from "flowbite-react"
-import { useMemo, useState, useRef } from "react"
+import { useMemo, useState, useRef, useEffect } from "react"
 import type { Dispatch, SetStateAction } from "react"
 import { useFloating, autoUpdate, offset, flip, shift, size } from "@floating-ui/react"
 
@@ -29,9 +29,43 @@ export default function SearchSelect(props: SearchSelectProps) {
   } = props
 
   const [isOpen, setIsOpen] = useState(false)
+  const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const inputRef = useRef<HTMLInputElement>(null)
+  const optionRef = useRef<HTMLButtonElement | null>(null)
 
   const chosenOption = useMemo(() => options.find((o) => o.value === selected), [options, selected])
+
+  // When dropdown opens, set highlighted index to current selection or 0 (or -1 if no options)
+  useEffect(() => {
+    if (isOpen) {
+      if (options.length === 0) {
+        setHighlightedIndex(-1)
+      } else {
+        const idx = options.findIndex((o) => o.value === selected)
+        setHighlightedIndex(idx >= 0 ? idx : 0)
+      }
+    } else {
+      setHighlightedIndex(-1)
+    }
+  }, [isOpen])
+
+  // When the user types (selected changes) while open, sync highlighted index to first/current match.
+  // We depend only on selected, not options, so keyboard navigation (arrow keys) doesn't get reset
+  // when the parent re-renders and passes a new options array reference.
+  useEffect(() => {
+    if (!isOpen) return
+    if (options.length === 0) {
+      setHighlightedIndex(-1)
+      return
+    }
+    const idx = options.findIndex((o) => o.value === selected)
+    setHighlightedIndex(idx >= 0 ? idx : 0)
+  }, [isOpen, selected])
+
+  // Scroll highlighted option into view
+  useEffect(() => {
+    optionRef.current?.scrollIntoView({ block: "nearest" })
+  }, [highlightedIndex])
 
   const { refs, floatingStyles } = useFloating({
     open: isOpen,
@@ -51,6 +85,38 @@ export default function SearchSelect(props: SearchSelectProps) {
     whileElementsMounted: autoUpdate,
   })
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen) return
+    const canNavigate = !loading && options.length > 0
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault()
+        if (canNavigate) {
+          setHighlightedIndex((i) => Math.min(i + 1, options.length - 1))
+        }
+        break
+      case "ArrowUp":
+        e.preventDefault()
+        if (canNavigate) {
+          setHighlightedIndex((i) => Math.max(i - 1, 0))
+        }
+        break
+      case "Enter":
+        e.preventDefault()
+        if (canNavigate && highlightedIndex >= 0 && options[highlightedIndex]) {
+          onValueChange(options[highlightedIndex].value)
+          setIsOpen(false)
+          inputRef.current?.focus()
+        }
+        break
+      case "Escape":
+        e.preventDefault()
+        setIsOpen(false)
+        inputRef.current?.focus()
+        break
+    }
+  }
+
   return (
     <div>
       <div ref={refs.setReference}>
@@ -60,6 +126,7 @@ export default function SearchSelect(props: SearchSelectProps) {
           value={(getValueText ? getValueText(selected) : selected) || chosenOption?.label || ""}
           onChange={(e) => {
             onValueChange(e.target.value)
+            setIsOpen(true)
           }}
           onFocus={() => setIsOpen(true)}
           onBlur={(e) => {
@@ -68,6 +135,7 @@ export default function SearchSelect(props: SearchSelectProps) {
               onBlur?.()
             }, 150)
           }}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder || "Search..."}
           color={color}
         />
@@ -93,10 +161,13 @@ export default function SearchSelect(props: SearchSelectProps) {
                     No options
                   </div>
                 ) : (
-                  options.map(({ value, label }) => (
+                  options.map(({ value, label }, index) => (
                     <button
                       key={value}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors"
+                      ref={index === highlightedIndex ? optionRef : undefined}
+                      className={`w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors ${
+                        index === highlightedIndex ? "bg-gray-100" : ""
+                      }`}
                       onMouseDown={(e) => {
                         e.preventDefault()
                       }}
