@@ -46,11 +46,15 @@ export default function StationSelect(props: StationSelectProps) {
                   station.full_name!.toLowerCase().startsWith(value.toLowerCase()) ||
                   station.crs?.toLowerCase().startsWith(value.toLowerCase())
               )
-              .sort(
-                (a: Location, b: Location) =>
-                  (value.length === 3 ? a.crs?.localeCompare(b.crs || "") || 0 : 0) +
-                  a.full_name!.localeCompare(b.full_name!)
-              )
+              .sort((a: Location, b: Location) => {
+                if (value.length === 3) {
+                  const q = value.toLowerCase()
+                  const aCrsFirst = a.crs?.toLowerCase() === q ? 0 : 1
+                  const bCrsFirst = b.crs?.toLowerCase() === q ? 0 : 1
+                  return aCrsFirst - bCrsFirst || a.full_name!.localeCompare(b.full_name!)
+                }
+                return a.full_name!.localeCompare(b.full_name!)
+              })
               .filter((_: Location, i: number) => i < 10)
               .map((station: Location) => ({
                 value: titleCase(station.full_name!),
