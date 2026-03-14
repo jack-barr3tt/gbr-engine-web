@@ -22,12 +22,12 @@ export default function Home() {
       <div className="pt-8 md:p-8 flex items-center flex-col justify-center flex-1">
         <div className="flex-col flex gap-4">
           <h1 className="text-3xl md:text-5xl p-2 font-extrabold bg-linear-to-br text-center from-orange-400 to-orange-500 bg-clip-text text-transparent">
-            The new standard in <br />
-            UK railway insights
+            The modern railway <br />
+            insight platform
           </h1>
           <p className="text-center">
-            Rail Engine doesn't just rely on public data feeds, <br />
-            it uses advanced algorithms to fill knowledge gaps.
+            We're still building right now, but we have big ambitions <br />
+            to set a new standard in rail data analysis.
           </p>
         </div>
       </div>
