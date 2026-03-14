@@ -3,6 +3,52 @@ import { Card } from "flowbite-react"
 import { useServicesSearch } from "~/hooks/useServicesSearch"
 import ServiceSearch from "~/components/servicesearch"
 import ServiceTable from "~/components/servicetable"
+import { getLocations } from "~/api/requests"
+import { getBackendUrl } from "~/config"
+import { titleCase } from "~/utils/format"
+import type { Route } from "./+types/services"
+
+const TITLE_SUFFIX = " · Rail Engine"
+
+export function meta({ loaderData }: Route.MetaArgs) {
+  const { fromName, toName } = loaderData ?? {}
+  let title: string
+  if (fromName && toName) {
+    title = `${fromName} to ${toName}${TITLE_SUFFIX}`
+  } else if (fromName || toName) {
+    title = `${fromName || toName}${TITLE_SUFFIX}`
+  } else {
+    title = "Services"
+  }
+  return [{ title }]
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url)
+  const fromCrs = url.searchParams.get("from")
+  const toCrs = url.searchParams.get("to")
+  let fromName: string | null = null
+  let toName: string | null = null
+
+  if (fromCrs || toCrs) {
+    const { data: locations } = await getLocations({ baseUrl: getBackendUrl() })
+    if (locations) {
+      const byCrs = (crs: string) =>
+        locations.find(
+          (loc) =>
+            loc.crs?.toLowerCase() === crs.toLowerCase() ||
+            loc.full_name?.toLowerCase() === crs.toLowerCase()
+        )
+      fromName = fromCrs ? titleCase(byCrs(fromCrs)?.full_name || fromCrs) : null
+      toName = toCrs ? titleCase(byCrs(toCrs)?.full_name || toCrs) : null
+    } else {
+      fromName = fromCrs
+      toName = toCrs
+    }
+  }
+
+  return { fromName, toName }
+}
 
 export default function Services() {
   const [searchParams] = useSearchParams()

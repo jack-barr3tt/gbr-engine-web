@@ -3,7 +3,34 @@ import type { Route } from "./+types/service"
 import { Card, Button } from "flowbite-react"
 import { FaArrowLeft } from "react-icons/fa"
 import { getService } from "~/api/requests"
+import { ApiError } from "~/api/requests/core/ApiError"
+import { getBackendUrl } from "~/config"
 import StopsTable from "~/components/stopstable"
+import { titleCase } from "~/utils/format"
+
+const TITLE_SUFFIX = " · Rail Engine"
+
+export function meta({ loaderData }: Route.MetaArgs) {
+  const service = loaderData?.service
+  if (!service?.locations?.length) {
+    return [{ title: `Service${TITLE_SUFFIX}` }]
+  }
+  const origin = service.locations.find((loc) => loc.location_order === 1)
+  const destination = service.locations[service.locations.length - 1]
+  const departureTime = origin?.public_departure || origin?.departure
+  const timeStr = departureTime ? departureTime.substring(0, 5) : null
+  const originName = origin?.location?.full_name
+    ? titleCase(origin.location.full_name)
+    : origin?.location?.crs ?? null
+  const destName = destination?.location?.full_name
+    ? titleCase(destination.location.full_name)
+    : destination?.location?.crs ?? null
+  const title =
+    timeStr && originName && destName
+      ? `${timeStr} ${originName} to ${destName}${TITLE_SUFFIX}`
+      : `Service ${service.train_uid}${TITLE_SUFFIX}`
+  return [{ title }]
+}
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url)
@@ -21,7 +48,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   try {
     const { data, error } = await getService({
-      baseUrl: process.env.VITE_BACKEND_URL,
+      baseUrl: getBackendUrl(),
       query: {
         id: id ? parseInt(id) : undefined,
         date: date || undefined,
@@ -35,6 +62,14 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     return { service: data, date }
   } catch (err) {
+    if (err instanceof Response) throw err
+    if (err instanceof ApiError) {
+      const status = err.status === 404 ? 404 : err.status >= 400 && err.status < 500 ? err.status : 502
+      throw new Response(err.statusText || "Failed to load service", { status })
+    }
+    if (import.meta.env.DEV && err instanceof Error) {
+      console.error("[service loader]", err)
+    }
     throw new Response("Failed to load service", { status: 500 })
   }
 }

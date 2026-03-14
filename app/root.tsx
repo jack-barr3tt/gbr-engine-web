@@ -4,10 +4,15 @@ import type { Route } from "./+types/root"
 import "./app.css"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { client } from "./api/requests"
+import { backendUrl } from "./config"
 import NavBar from "./components/navbar"
 import { ThemeInit } from "../.flowbite-react/init"
 import { createTheme, ThemeProvider } from "flowbite-react"
 import { NetworkMonitorProvider, addSpeed } from "./hooks/networkmonitor"
+
+export function meta(): Route.MetaDescriptors {
+  return [{ title: "Rail Engine" }]
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,7 +52,7 @@ const monitoredFetch: typeof fetch = async (...args) => {
 }
 
 client.setConfig({
-  baseUrl: import.meta.env.VITE_BACKEND_URL,
+  baseUrl: backendUrl,
   fetch: monitoredFetch,
 })
 
